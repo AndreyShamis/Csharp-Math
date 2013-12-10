@@ -9,12 +9,16 @@ namespace TemplateTest
 {
     public class GraphVertex<T> :  IGraphVertex
     {
-        public static long VertexCounter;
-        public T value { set; get; }
-        private ArrayList neightbors = null;
-        private ArrayList edgeNeightbors = null;
+        public static long  VertexCounter;
+        public T            value { set; get; }
+        private ArrayList   neightbors = null;
+        private ArrayList   edgeNeightbors = null;
+        public long         id { get; internal set; }
+
+
         public GraphVertex()
         {
+            id = VertexCounter; 
             VertexCounter++;
         }
 
