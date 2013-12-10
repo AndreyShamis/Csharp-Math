@@ -51,7 +51,7 @@ namespace TemplateTest
                 Console.Out.WriteLine("Neightbor not found");
             }
             sw.Stop();
-            insertTime = sw.Elapsed.Ticks;
+            insertTime = sw.Elapsed.TotalMilliseconds;
         }
 
         public long VertexsCount()
