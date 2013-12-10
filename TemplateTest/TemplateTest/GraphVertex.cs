@@ -9,12 +9,15 @@ namespace TemplateTest
 {
     public class GraphVertex<T> :  IGraphVertex
     {
-        public static long  VertexCounter;
+        protected static long  VertexCounter;
         public T            value { set; get; }
-        private ArrayList   neightbors = null;
-        private ArrayList   edgeNeightbors = null;
+        private LinkedList<GraphVertex<T>> neightbors = new LinkedList<GraphVertex<T>>();
         public long         id { get; internal set; }
 
+        public int GetNeightborsCount()
+        {
+            return neightbors.Count;
+        }
 
         public GraphVertex()
         {
@@ -24,7 +27,7 @@ namespace TemplateTest
 
         public bool AddNeightbor(GraphVertex<T>  neightbor)
         {
-            neightbors.Add(neightbor);
+            neightbors.AddFirst(neightbor);
             return true;
         }
 

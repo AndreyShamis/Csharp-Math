@@ -10,23 +10,56 @@ namespace TemplateTest
 {
     public class Graph<T>
     {
-        private ArrayList vertex = new ArrayList();
-        private ArrayList edge = new ArrayList();
-        public double insertTime { get; internal set; }
-        public double addTime { get; internal set; }
+        private static Random               rnd = new Random();
+        private LinkedList<IGraphEdge>      m_Edge = new LinkedList<IGraphEdge>();
+        public double       insertTime { get; internal set; }
+        public double       addTime { get; internal set; }
 
-        private LinkedList<GraphVertex<T>> m_Vertex = new LinkedList<GraphVertex<T>>();
+        private LinkedList<IGraphVertex>    m_Vertex = new LinkedList<IGraphVertex>();
         
-        public double findVertexTime { get; internal set; }
-        public double findVertexByValueTime { get; internal set; }
+        public double       findVertexTime { get; internal set; }
+        public double       findVertexByValueTime { get; internal set; }
 
-        public void InsertVertex(GraphVertex<T> newVertex)
+        public Graph<T> BFS()
+        {
+            return new Graph<T>();
+        }
+
+        public Graph<T> DFS()
+        {
+            return new Graph<T>();
+        }
+
+        public bool isFull()
+        {
+            if (m_Vertex.Count == 1)
+                return true;
+            if (m_Edge.Count+1 < m_Vertex.Count)
+                return false;
+            if ((m_Edge.Count *2 >= m_Vertex.Count))    //  TODO CHECK IT
+                return true;
+
+            return false;
+        }
+
+        public bool isComplete()
+        {
+            if (m_Vertex.Count == 1)
+                return true;
+
+            if (!isFull())
+                return false;
+            
+            return false;
+        }
+
+        public void InsertVertex(IGraphVertex newVertex)
         {
             AddVertex(newVertex);
         }
 
 
-        private void AddVertex(GraphVertex<T> newVertex)
+        private void AddVertex(IGraphVertex newVertex)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -36,7 +69,22 @@ namespace TemplateTest
             addTime = sw.Elapsed.TotalMilliseconds;
         }
 
-        public void InsertVertex(GraphVertex<T> newVertex, GraphVertex<T> neightbor)
+        public GraphVertex<T> GetRandomVertex()
+        {
+            
+            long id = rnd.Next(0, Convert.ToInt32( this.VertexsCount())-1);
+            long counter = 0;
+            foreach (GraphVertex<T> tmp in m_Vertex)
+            {
+                if (counter == id)
+                    return tmp;
+
+                counter++;
+            }
+            return null;
+        }
+
+        public void InsertVertex(IGraphVertex newVertex, IGraphVertex neightbor)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -61,13 +109,13 @@ namespace TemplateTest
         
         public long EdgesCount()
         {
-            return (edge != null) ? edge.Count : 0;
+            return (m_Edge != null) ? m_Edge.Count : 0;
         }
 
-        public void InsertEdge(GraphVertex<T> v1, GraphVertex<T> v2)
+        public void InsertEdge(IGraphVertex v1, IGraphVertex v2)
         {
             GraphEdge newEdge = new GraphEdge(v1, v2);
-            edge.Add(newEdge);
+            m_Edge.AddFirst(newEdge);
         }
 
         public IGraphVertex GetVertexByValue(T otherValue)
@@ -76,7 +124,7 @@ namespace TemplateTest
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            foreach (IGraphVertex tmp in vertex)
+            foreach (IGraphVertex tmp in m_Vertex)
             {
                 if ( EqualityComparer<T>.Default.Equals( otherValue,((GraphVertex<T>)tmp).value))
                 {
@@ -89,27 +137,20 @@ namespace TemplateTest
             return ret;
         }
 
-        public IGraphVertex GetVertex(GraphVertex<T> other)
+        public IGraphVertex GetVertex(IGraphVertex other)
         {
             IGraphVertex ret = null;
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            /*foreach (IGraphVertex tmp in vertex)
-            {
-                if (other.(tmp))
-                {
-                    ret = tmp;
-                    break;
-                }
-            }*/
-            if (vertex.Contains(other))
+
+            if (m_Vertex.Contains(other))
                 ret = new GraphVertex<T>();
             sw.Stop();
             findVertexTime = sw.Elapsed.TotalMilliseconds;
             return ret;
         }
 
-        public bool Contains(GraphVertex<T> other)
+        public bool Contains(IGraphVertex other)
         {
             bool ret = false;
             Stopwatch sw = new Stopwatch();
@@ -121,12 +162,12 @@ namespace TemplateTest
             return ret;
         }
 
-        public IGraphVertex GetVertexEquels(GraphVertex<T> other)
+        public IGraphVertex GetVertexEquels(IGraphVertex other)
         {
             IGraphVertex ret = null;
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            foreach (IGraphVertex tmp in vertex)
+            foreach (IGraphVertex tmp in m_Vertex)
             {
                 if (other.Equals(tmp))
                 {

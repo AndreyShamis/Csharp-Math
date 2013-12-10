@@ -68,7 +68,7 @@ namespace TemplateTest
                 ver3 = new GraphVertex<int>();
                 ver3.value = i;
 
-                int te = rnd.Next(1, 10);
+                int te = rnd.Next(1, rnd.Next(4,7));
                 if (te == 3 && i > 2)
                 {
                     gra.InsertVertex(ver3, prev);
@@ -77,13 +77,24 @@ namespace TemplateTest
                 else
                 {
                     gra.InsertVertex(ver3);
-                    if (te == 7)
+                    if (te == 4)
                     {
-                        ThreadPool.QueueUserWorkItem(new WaitCallback((s) => PrintLog("ADD: Edge. ID is\t\t [ " + ver3.id + " ]")));
+                        if (chkWriteLog.Checked)
+                            ThreadPool.QueueUserWorkItem(new WaitCallback((s) => PrintLog("ADD: Edge. ID is\t\t [ " + ver3.id + " ]")));
                         gra.InsertEdge(prev, ver3);
-                        //Thread.Sleep(1);
+                        Thread.Sleep(1);
                     }
-
+                    else if (te == 5)
+                    {
+                        GraphVertex<int> tmp = gra.GetRandomVertex();
+                        if (tmp != null)
+                        {
+                            if (chkWriteLog.Checked)
+                                ThreadPool.QueueUserWorkItem(new WaitCallback((s) => PrintLog("ADD:Random Edge. ID is\t\t [ " + tmp.id + " ]")));
+                            gra.InsertEdge(tmp, ver3);
+                            Thread.Sleep(1);
+                        }
+                    }
                     
                 }
                 
@@ -99,6 +110,8 @@ namespace TemplateTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            label4.BackColor = Color.DarkKhaki;
+            
             GraphicTable.piB.Parent = this;
             GraphicTable.piB.Location = new System.Drawing.Point(10, 10);
             GraphicTable.piB.Size = new Size(GraphicTable._BOARDX, GraphicTable._BOARDY);
@@ -173,7 +186,7 @@ namespace TemplateTest
             lblEdgeSize.Text = gra.EdgesCount().ToString();
             lblVertexSize.Text = count.ToString();
             if (count > 0)
-                lblGraphParameter.Text = "" + Math.Round ((gra.EdgesCount() + 0.000) / count,2);
+                lblGraphParameter.Text = "" + Math.Round ((gra.EdgesCount() + 0.0000000) / count,6);
 
             lblGraphInsertTime.Text = "" + gra.insertTime;
             lblGraphFindTime.Text = "" + gra.findVertexTime;
@@ -228,7 +241,24 @@ namespace TemplateTest
                 chart3.Series[2].Points.AddXY(count, gra.addTime);
                 prevCountSec = count;
             }
-        
+
+            Color disabled = Color.DarkSeaGreen;
+            if (gra.isFull())
+            {
+                lblGraphIsFull.BackColor = Color.GreenYellow;
+            }
+            else
+            {
+                lblGraphIsFull.BackColor = disabled;
+            }
+            if (gra.isComplete())
+            {
+                lblGraphIsComplete.BackColor = Color.GreenYellow;
+            }
+            else
+            {
+                lblGraphIsComplete.BackColor = disabled;
+            }
         }
     }
 }
