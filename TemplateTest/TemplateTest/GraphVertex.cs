@@ -13,6 +13,7 @@ namespace TemplateTest
         public T            value { set; get; }
         private LinkedList<GraphVertex<T>> neightbors = new LinkedList<GraphVertex<T>>();
         public long         id { get; internal set; }
+        public bool colored { set; get; }
 
         public int GetNeightborsCount()
         {
@@ -23,6 +24,7 @@ namespace TemplateTest
         {
             id = VertexCounter; 
             VertexCounter++;
+            colored = false;
         }
 
         public bool AddNeightbor(GraphVertex<T>  neightbor)

@@ -20,12 +20,22 @@ namespace TemplateTest
         public double       findVertexTime { get; internal set; }
         public double       findVertexByValueTime { get; internal set; }
 
-        public Graph<T> BFS()
+        public Graph<T> BFS(IGraphVertex v)
+        {
+            return GetBFS(this,v);
+        }
+
+        public static Graph<T> GetBFS(Graph<T> graph, IGraphVertex v)
         {
             return new Graph<T>();
         }
 
-        public Graph<T> DFS()
+        public Graph<T> DFS(IGraphVertex v)
+        {
+            return GetDFS(this,v);
+        }
+
+        public static Graph<T> GetDFS(Graph<T> graph, IGraphVertex v)
         {
             return new Graph<T>();
         }
